@@ -155,3 +155,43 @@ You must understand every line you submit. We check this with your video and in 
 5. Paste the repository link and the video link in the application form.
 
 We will run `pnpm install && pnpm check && pnpm typecheck && pnpm test` on your repository.
+
+## Getting Started
+
+### Prerequisites
+- Node.js
+- pnpm
+
+### Installation
+
+```bash
+pnpm install
+```
+
+### Run the application
+
+```bash
+pnpm dev
+```
+
+Open http://localhost:5173 in your browser.
+
+### Validation
+
+```bash
+pnpm check
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+## Decisions
+
+### 1. Store money in integer cents
+All bill amounts and shares are stored as integer cents instead of floating-point values. This avoids rounding errors when calculating and splitting payments.
+
+### 2. Distribute remainder cents in insertion order
+Bills are divided evenly among all home members. If the total cannot be divided equally, the remaining cents are assigned one by one in member insertion order. This makes the split predictable and consistent.
+
+### 3. Use idempotency keys for payments
+Each payment request requires an `Idempotency-Key`. The API uses conditional database updates to prevent duplicate payments and handles repeated requests safely. This helps protect payment records when requests are retried or sent concurrently.
